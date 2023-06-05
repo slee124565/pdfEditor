@@ -24,23 +24,40 @@ def execute_command():
 
     page = reader.pages[0]
     # fields = reader.get_fields()
-    txt_fields = reader.get_form_text_fields()
+    # txt_fields = reader.get_form_text_fields()
 
     writer.add_page(page)
 
-    for key in txt_fields.keys():
-        if key in fields.keys():
-            writer.update_page_form_field_values(
-                writer.pages[0], {key: f'{key}'}
-            )
+    # for key in txt_fields.keys():
+    #     writer.update_page_form_field_values(
+    #         writer.pages[0], {key: f'{key}'}
+    #     )
+    count = amount = 0
+    name = ''
+    for key in fields.keys():
+        if key in ['fill_67', 'fill_68', 'fill_69']:
+            pass
+        else:
+            value = fields.get(key).get()
+            if value:
+                _, index = key.split('_')
+                if int(index) % 2 == 1:
+                    count = int(f'{value}')
+                    name = next(name for n, name in items if n == int(index))
+                else:
+                    amount = int(f'{value}')
+                    name = next(name for n, name in items if n == int(index)-1)
+                if count and amount:
+                    print(f'name {name}, count {count}, amount {amount}')
+                    count = amount = 0
 
     # write "output" to PyPDF2-output.pdf
-    with open("print.pdf", "wb") as output_stream:
-        writer.write(output_stream)
+    # with open("print.pdf", "wb") as output_stream:
+    #     writer.write(output_stream)
 
     # input('Press any key to continue ...')
-    cmd = 'open print.pdf'
-    subprocess.run(cmd.split(' '))
+    # cmd = 'open print.pdf'
+    # subprocess.run(cmd.split(' '))
 
 
 # 创建第一部分标签和输入框
