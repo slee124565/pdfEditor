@@ -1,7 +1,6 @@
 from PyPDF2 import PdfReader, PdfWriter
 import subprocess
 
-
 if __name__ == '__main__':
     reader = PdfReader("form.pdf")
     writer = PdfWriter()
@@ -13,8 +12,14 @@ if __name__ == '__main__':
     writer.add_page(page)
 
     for key in txt_fields.keys():
+        if 'Text' in f'{key}':
+            value = key.replace('Text', '')
+        elif '_' in key:
+            value = key.split('_')[1]
+        else:
+            value = key
         writer.update_page_form_field_values(
-            writer.pages[0], {key: f'{key}'}
+            writer.pages[0], {key: f'{value}'}
         )
 
     # write "output" to PyPDF2-output.pdf
@@ -24,4 +29,3 @@ if __name__ == '__main__':
     input('Press any key to continue ...')
     cmd = 'open filled-out.pdf'
     subprocess.run(cmd.split(' '))
-

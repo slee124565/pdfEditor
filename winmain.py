@@ -19,12 +19,12 @@ fields = {}
 #     print("经费编号:", number)
 #     # 可在此处添加更多操作
 def execute_command():
-    count = amount = 0
+    count = amount = total = 0
     name = ''
     data = {}
     for key in fields.keys():
         value = fields.get(key).get()
-        if value:
+        if value and 'fill_' in key:
             if key in ['fill_67', 'fill_68', 'fill_69']:
                 data[key] = value
             else:
@@ -36,11 +36,30 @@ def execute_command():
                         data[key] = value
                     else:
                         amount = int(f'{value}')
-                        name = next(name for n, name in items if n == int(index)-1)
+                        name = next(name for n, name in items if n == int(index) - 1)
                     data[key] = value
                     if count and amount:
-                        print(f'name {name}, count {count}, amount {amount}')
-                        count = amount = 0
+                        try:
+                            total += float(count) * float(amount)
+                            print(f'total = {total}')
+                            count = amount = 0
+                        except Exception as _:
+                            continue
+
+    # 合計金額更新
+    data['fill_70'] = '{:.2f}'.format(total)
+
+    # 將合計金額以國字大寫輸出
+    num_list = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖']
+    number = '{:.2f}'.format(total)
+    count = 0
+    for i in range(len(number)-1, -1, -1):
+        if number[i] == '.':
+            pass
+        else:
+            num = int(number[i])
+            data[f'Text{10-count}'] = num_list[num]
+        count += 1
 
     reader = PdfReader("form.pdf")
     writer = PdfWriter()
