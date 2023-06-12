@@ -31,16 +31,16 @@ def execute_command():
                 if value:
                     _, index = key.split('_')
                     if int(index) % 2 == 1:
-                        count = int(f'{value}')
+                        count = float(f'{value}')
                         name = next(name for n, name in items if n == int(index))
                         data[key] = value
                     else:
-                        amount = int(f'{value}')
+                        amount = float(f'{value}')
                         name = next(name for n, name in items if n == int(index) - 1)
                     data[key] = value
                     if count and amount:
                         try:
-                            total += float(count) * float(amount)
+                            total += count * total
                             print(f'total = {total}')
                             count = amount = 0
                         except Exception as _:
@@ -53,12 +53,12 @@ def execute_command():
     num_list = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖']
     number = '{:.2f}'.format(total)
     count = 0
-    for i in range(len(number)-1, -1, -1):
+    for i in range(len(number) - 1, -1, -1):
         if number[i] == '.':
             pass
         else:
             num = int(number[i])
-            data[f'Text{10-count}'] = num_list[num]
+            data[f'Text{10 - count}'] = num_list[num]
         count += 1
 
     reader = PdfReader("form.pdf")
