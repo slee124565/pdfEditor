@@ -1,4 +1,5 @@
-from PyPDF2 import PdfReader, PdfWriter
+# from pypdf import PdfReader, PdfWriter
+from fillpdf import fillpdfs
 import tkinter as tk
 import subprocess
 
@@ -40,7 +41,7 @@ def execute_command():
                     data[key] = value
                     if count and amount:
                         try:
-                            total += count * total
+                            total += count * amount
                             print(f'total = {total}')
                             count = amount = 0
                         except Exception as _:
@@ -59,18 +60,24 @@ def execute_command():
         else:
             num = int(number[i])
             data[f'Text{10 - count}'] = num_list[num]
-        count += 1
+            count += 1
 
-    reader = PdfReader("form.pdf")
-    writer = PdfWriter()
-    page = reader.pages[0]
-    writer.add_page(page)
-    writer.update_page_form_field_values(
-        writer.pages[0], data)
+    # reader = PdfReader("form.pdf")
+    # writer = PdfWriter()
+    # # writer.set_need_appearances_writer()
+    #
+    # page = reader.pages[0]
+    # writer.add_page(page)
+    # # writer.append(reader)
+    #
+    # writer.update_page_form_field_values(
+    #     writer.pages[0], data)
+    #
+    # # write "output" to PyPDF2-output.pdf
+    # with open("filled-out.pdf", "wb") as output_stream:
+    #     writer.write(output_stream)
 
-    # write "output" to PyPDF2-output.pdf
-    with open("filled-out.pdf", "wb") as output_stream:
-        writer.write(output_stream)
+    fillpdfs.write_fillable_pdf('form.pdf', 'filled-out.pdf', data_dict=data)
 
     # input('Press any key to continue ...')
     cmd = 'open filled-out.pdf'

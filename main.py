@@ -1,4 +1,4 @@
-from PyPDF2 import PdfReader, PdfWriter
+from pypdf import PdfReader, PdfWriter
 import subprocess
 
 if __name__ == '__main__':
@@ -9,7 +9,9 @@ if __name__ == '__main__':
     # fields = reader.get_fields()
     txt_fields = reader.get_form_text_fields()
 
-    writer.add_page(page)
+    # writer.add_page(page)
+    writer.append(reader)
+    writer.set_need_appearances_writer()
 
     for key in txt_fields.keys():
         if 'Text' in f'{key}':
